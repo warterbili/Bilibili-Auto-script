@@ -1,0 +1,61 @@
+// ==UserScript==
+// @name         最终结果
+// @namespace    http://tampermonkey.net/
+// @version      2024-12-14
+// @description  try to take over the world!
+// @author       You
+// @match        https://www.bilibili.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=baidu.com
+// @grant        none
+// @run-at       document-idle
+// ==/UserScript==
+
+(function() {
+    'use strict';
+ var weblink = window.location.href
+ if (weblink == 'https://www.bilibili.com/'){
+    var selector1 = document.querySelector('#i_cecream').querySelector('.bili-feed4').querySelector('.bili-feed4-layout').querySelector('.feed2').querySelector('.recommended-container_floor-aside').querySelector('.container.is-version8').querySelectorAll('.container.is-version8>.feed-card')
+    var selector2 = document.querySelector('#i_cecream').querySelector('.bili-feed4').querySelector('.bili-feed4-layout').querySelector('.feed2').querySelector('.recommended-container_floor-aside').querySelector('.container.is-version8').querySelectorAll('.container.is-version8>.bili-video-card.is-rcmd.enable-no-interest')
+    var selector = [...selector1, ...selector2]
+    var dizhi = []
+    var finalAddress = []
+    for (let name of selector) {
+    dizhi.push(`${name.querySelectorAll('a')[0]}`)
+    }
+    for (let item of dizhi){
+        let str = `${item}`
+        if(str.includes('video')){
+            finalAddress.push(item)
+        }
+    }
+    function processArrayValue(value) {
+        window.open(value)
+    }
+    var currentIndex = 0
+    let intervalId = setInterval(() => {
+        if (currentIndex < finalAddress.length) {
+            processArrayValue(finalAddress[currentIndex]);
+            currentIndex++;
+        } else {
+            clearInterval(intervalId);
+            window.location.reload();
+
+        }
+    }, 10000);
+}else if(weblink.includes('video')){
+    setInterval(function(){
+        if(document.querySelector('#commentapp').getElementsByTagName('bili-comments')[0].shadowRoot.querySelector('#header').getElementsByTagName('bili-comments-header-renderer')[0].shadowRoot.querySelector('#commentbox').getElementsByTagName('bili-comment-box')[0].shadowRoot.querySelector('#body').querySelector('#editor').getElementsByTagName('bili-comment-rich-textarea')[0].shadowRoot.querySelector('#input').querySelector('.brt-root').querySelector('.brt-editor')){
+            var inputEvent = new Event('input', {
+                bubbles: true, // 设置事件冒泡
+                cancelable: true // 设置事件可以取消
+              });
+              document.querySelector('#commentapp').getElementsByTagName('bili-comments')[0].shadowRoot.querySelector('#header').getElementsByTagName('bili-comments-header-renderer')[0].shadowRoot.querySelector('#commentbox').getElementsByTagName('bili-comment-box')[0].shadowRoot.querySelector('#body').querySelector('#editor').getElementsByTagName('bili-comment-rich-textarea')[0].shadowRoot.querySelector('#input').querySelector('.brt-root').querySelector('.brt-editor').innerHTML = '哈哈哈哈哈'
+              document.querySelector('#commentapp').getElementsByTagName('bili-comments')[0].shadowRoot.querySelector('#header').getElementsByTagName('bili-comments-header-renderer')[0].shadowRoot.querySelector('#commentbox').getElementsByTagName('bili-comment-box')[0].shadowRoot.querySelector('#body').querySelector('#editor').getElementsByTagName('bili-comment-rich-textarea')[0].shadowRoot.querySelector('#input').querySelector('.brt-root').querySelector('.brt-editor').dispatchEvent(inputEvent);
+              document.querySelector('#commentapp').getElementsByTagName('bili-comments')[0].shadowRoot.querySelector('#header').getElementsByTagName('bili-comments-header-renderer')[0].shadowRoot.querySelector('#commentbox').getElementsByTagName('bili-comment-box')[0].shadowRoot.querySelector('#footer').querySelector('#pub').getElementsByTagName('button')[0].click();
+
+            window.close()
+        }
+    },1000);
+
+}
+})();
